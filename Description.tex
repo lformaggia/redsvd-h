@@ -1,0 +1,83 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb}
+\title{RandomizED Singular Value Decomposition}
+\author{Niagathan Halko, Per-Gunnar Martinsson, Joel A. Tropp,\\ adapted
+  by Luca Formaggia}
+\date{12th February 2019}
+\begin{document}
+\maketitle
+\section{General description}
+\texttt{redsvd} is a library for solving several matrix decompositions
+including singular value decomposition (SVD), principal component
+analysis (PCA), and eigen value decomposition. redsvd can handle very
+large matrix efficiently, and optimized for a truncated SVD of sparse
+matrices. For example, redsvd can compute a truncated SVD with top 20
+singular values for a $100K x 100K$ matrix with $1\times 10^6$ nonzero entries in
+less than one second.
+
+The algorithm is based on the randomized algorithm for computing
+large-scale SVD~\cite{Haiko11}. Although it uses randomized matrices,
+the results is very accurate with very high probability. See the
+experiment part for the detail.
+
+The code \texttt{redsvd.hpp} is the core part of redsvd and self explanatory.
+
+\section{A quick glance to the algorithm}
+Let $A$ be a matrix to be analyzed with $n$ rows and $m$ columns, and $r$ be
+the ranks of a truncated SVD (if you choose $r = \min(n, m)$, then this
+is the original SVD).
+
+First a random Gaussian matrix $O$ with $n$ rows and $r$ columns is sampled
+and the code computes $Y = A^T O$, then $Y\in\mathbb{R}^{m\times r}$
+Then we apply the Gram-Schmidt
+process to $Y$ so that each column of $Y$ is ortho-normalized. Then we
+compute $B = AY$, clearly $B\in\mathbb{R}^{n\times r}$. Although the size of $Y$ is
+much smaller than that of $A$, $Y$ holds almost surely the information of the rows of $A$.
+
+That is,
+\[
+  AYY^T\simeq A.
+\]
+Intuitively, the row information of $A$ is compressed by $Y$ and
+decompressed by $Y^T$.
+
+Similarly, we take another random Gaussian matrix $P$ with $r$ rows
+and $r$ columns, and compute $Z = BP$, clearly $Z\in\mathbb{R}^{n\times r}$. As in the previous case, the
+columns of $Z$ are then ortho-normalized by a Gram-Schmidt process. Now
+we have
+\[
+ZZ^T B \simeq B,
+\]
+which means that $Z^TB=Z^{T}AY\in\mathbb{R}^{r\times r}$ is compressing the columns of $B$, which is itself the matrix containing the
+compressed information of the rows of $A$.
+
+We finally compute the SVD decomposition of $C = Z^T B$, ($C\in\mathbb{R}^{r\times r}$) using a traditional SVD solver.
+Thus, we have
+\[
+  C = USV^T
+\]
+where $U$ and $V$ are orthonormal square matrices of dimension $r$, and $S$ is the
+diagonal matrix whose entries are the singular values of $C$. Since $C$
+is small (in the hypothesis that $r<<\min(n,m)$), the time for the SVD decomposition
+is negligible.
+
+The reduced SVD decomposition of  $A$, that we indicate by $A_r$ is then given by
+\[
+A = ZUSV^TY^T
+\]
+Both $ZU\in\mathbb{R}^{n\times r}$ and $YV\in\mathbb{R}^{m\times r}$ are orthornormal, and $ZU$ contains
+the (approximated) first $r$ 
+left singular vectors and $YV$
+the first $r$ right singular vectors) of $A$. $S$ is the diagonal matrix with the approximated singular values.
+
+\begin{thebibliography}{10}
+
+\bibitem{Haiko11}
+{\sc N. Haiko, P.G Martinsson, j.A. Tropp}, {\em Finding structure with randomness: Probabilistic algorithms for constructing approximate matrix decompositions}.
+\newblock arXiv:0909.4061v2 [math.NA], 2010
+\end{thebibliography}
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

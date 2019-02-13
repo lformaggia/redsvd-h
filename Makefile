@@ -8,3 +8,9 @@ include ../../../Makefile.inc
 install:
 	install -d -v $(PACS_INC_DIR)/RedSVD
 	install  -p -v -t $(PACS_INC_DIR)/RedSVD/ ./include/RedSVD/RedSVD-h
+Description.pdf:Description.tex
+	pdflatex Description.tex
+clean:
+	$(RM) *.log *.aux *.dvi *~
+distclean: clean
+	$(RM) Description.pdf
