@@ -5,6 +5,7 @@
 # Installing to the main include directory is not necessary to test the examples
 #
 include ../../../Makefile.inc
+all: install Description.pdf test_redSVD
 install:
 	install -d -v $(PACS_INC_DIR)/RedSVD
 	install  -p -v -t $(PACS_INC_DIR)/RedSVD/ ./include/RedSVD/*.hpp
