@@ -138,11 +138,11 @@ namespace RedSVD
    * This algorithm uses is a probabilistic algorithm. More details on this type of algorithms may be found in
    * <em>Finding structures with randomness:..., Halko, N. and Martinsson, P. G. and Tropp, J. A. (2009)</em>
    */
-  template<typename _MatrixType>
+  template<typename My_MatrixType>
   class RedSVD
   {
   public:
-    typedef _MatrixType MatrixType;
+    typedef My_MatrixType MatrixType;
     typedef typename MatrixType::Scalar Scalar;
     typedef typename MatrixType::Index Index;
     typedef typename Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> DenseMatrix;

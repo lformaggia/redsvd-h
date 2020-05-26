@@ -4,6 +4,7 @@
 #
 # Installing to the main include directory is not necessary to test the examples
 #
+RELEASE=yes
 include ../../../Makefile.inc
 all: install Description.pdf test_redSVD
 install:
@@ -13,6 +14,6 @@ Description.pdf:Description.tex
 	pdflatex Description.tex
 test_redSVD:test_redSVD.cpp 
 clean:
-	$(RM) *.log *.aux *.dvi *~
+	$(RM) test_redSVD *.log *.aux *.dvi *~
 distclean: clean
 	$(RM) Description.pdf
