@@ -12,6 +12,7 @@ install:
 	install  -p -v -t $(PACS_INC_DIR)/RedSVD/ ./include/RedSVD/*.hpp
 Description.pdf:Description.tex
 	pdflatex Description.tex
+	pdflatex Description.tex
 test_redSVD:test_redSVD.cpp 
 clean:
 	$(RM) test_redSVD *.log *.aux *.dvi *~

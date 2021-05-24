@@ -6,8 +6,8 @@
 int
 main ()
 {
-  unsigned int constexpr nrow = 10000;
-  unsigned int constexpr ncol = 10000;
+  int constexpr nrow = 10000;
+  int constexpr ncol = 1000;
   // Eigen::MatrixXd A(nrow,ncol);
   // A matrix
   // Testing a sparse matrix
@@ -21,7 +21,7 @@ main ()
   A.makeCompressed ();
   std::cout<<"Done"<<std::endl;
   // try to change the rank
-  unsigned int   rank = 10;
+  unsigned int   rank = 20;
   RedSVD::RedSVD redsvd (A, rank);
   // never use auto with Eigen matrices!
   Eigen::MatrixXd U = redsvd.matrixU ();
@@ -32,7 +32,7 @@ main ()
             << "X" << S.cols ();
   std::cout << " Vt=" << V.rows () << "X" << V.cols () << std::endl;
   auto As = U * S * V;
-  auto diff = (A - As).norm ();
+  auto diff = (A - As).norm ()/A.norm();
   std::cout << "Error  " << diff << std::endl;
   std::cout << "Actual rank " << actual_rank << std::endl;
   std::cout << "First " << actual_rank
